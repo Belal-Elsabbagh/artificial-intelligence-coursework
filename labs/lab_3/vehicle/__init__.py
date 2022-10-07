@@ -12,6 +12,7 @@ will become the final amount = total fare + 10% of the total fare.
 DEFAULT_CAPACITY = 50
 DEFAULT_RATE = 100
 
+
 class Vehicle:
     max_speed: float
     mileage: float
