@@ -25,3 +25,7 @@ class Point:
 
     def __sub__(self, other: Point) -> float:
         return np.hypot((self.x - other.x), (self.y - other.y)).astype(float)
+
+    def move(self, x, y):
+        self.x += x
+        self.y += y

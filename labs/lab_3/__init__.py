@@ -1,9 +1,9 @@
-from point import Point
-from rectangle import Rectangle
-from rectangle.cuboid import Cuboid
-from bank.account import Account
-from vehicle.bus import Bus
-from vehicle import Vehicle
+from labs.lab_3.point import Point
+from labs.lab_3.rectangle import Rectangle
+from labs.lab_3.rectangle.cuboid import Cuboid
+from labs.lab_3.bank.account import Account
+from labs.lab_3.vehicle.bus import Bus
+from labs.lab_3.vehicle import Vehicle
 
 
 def test_bank():
@@ -27,8 +27,14 @@ def test_rectangle():
 
 
 def test_point():
-    a = Point(3, 4)
+    a = Point(1, 2)
     b = Point(7, 8)
+    print(a)
+    a.move(3, 2)
     print(a)
     print(b)
     print(b - a)
+
+
+def run():
+    test_point()

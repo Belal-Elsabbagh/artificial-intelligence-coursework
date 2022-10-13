@@ -1,4 +1,4 @@
-from vehicle import Vehicle, DEFAULT_CAPACITY
+from labs.lab_3.vehicle import Vehicle, DEFAULT_CAPACITY
 
 MAINTENANCE_CHARGE_RATE = 1.1
 

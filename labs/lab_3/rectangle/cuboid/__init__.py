@@ -1,4 +1,4 @@
-from rectangle import Rectangle
+from labs.lab_3.rectangle import Rectangle
 
 
 class Cuboid(Rectangle):

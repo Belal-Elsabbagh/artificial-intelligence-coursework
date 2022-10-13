@@ -1,6 +1,7 @@
 """
 A Graph class that supports multiple searching algorithms.
 """
+from labs.lab_4.priority_queue import PriorityQueue
 
 
 class Graph:
@@ -18,7 +19,7 @@ class Graph:
     def get_number_of_nodes(self):
         return len(self.get_adjacency_list().keys())
 
-    def __dfs_util(self, node, goal, visited_list: list[str] = None):
+    def __dfs_search_util(self, node, goal, visited_list: list[str] = None):
         if visited_list is None:
             visited_list = list()
         visited_list.append(node)
@@ -26,14 +27,26 @@ class Graph:
             return True
         for neighbour in self.get_adjacency_list()[node]:
             if neighbour not in visited_list:
-                res = self.__dfs_util(neighbour, goal, visited_list)
+                res = self.__dfs_search_util(neighbour, goal, visited_list)
                 if res:
                     return visited_list
 
-    def get_dfs_sequence(self, start_node, goal) -> list[str]:
-        return self.__dfs_util(start_node, goal)
+    def __dfs_util(self, node, visited_list = None):
+        if visited_list is None:
+            visited_list = list()
+        visited_list.append(node)
+        for neighbour in self.get_adjacency_list()[node]:
+            if neighbour not in visited_list:
+                self.__dfs_util(neighbour, visited_list)
+        return visited_list
 
-    def get_bfs_sequence(self, start_node, search_node) -> list[str] | None:
+    def get_dfs_sequence(self, start_node) -> list[str]:
+        return self.__dfs_util(start_node)
+
+    def get_node_dfs(self,start, goal):
+        return self.__dfs_search_util(start, goal)
+
+    def search_bfs(self, start_node, search_node) -> list[str] | None:
         node = start_node
         queue = [node]
         visited: dict[str:bool] = {node: True}
@@ -45,19 +58,27 @@ class Graph:
                     visited[i] = True
         return list(visited.keys())
 
-    def uniform_cost_search(self, start, goal):
-        node = start
+    def get_bfs_sequence(self, start_node) -> list[str] | None:
+        node = start_node
         queue = [node]
         visited: dict[str:bool] = {node: True}
-        res = []
         while queue:
             node = queue.pop(0)
-            res.append(node)
-            for parent, neighbors in self.get_adjacency_list().items():
-                minimum_value = min(neighbors.values())
-                min_keys = [key for key in neighbors if neighbors[key] == minimum_value]
-                min_cost_neighbor = min_keys[0]
-                if min_cost_neighbor not in visited:
-                    queue.append(min_cost_neighbor)
-                    visited[min_cost_neighbor] = True
-        return res
+            for i in self.get_adjacency_list()[node]:
+                if i not in visited:
+                    queue.append(i)
+                    visited[i] = True
+        return list(visited.keys())
+
+    def uniform_cost_search(self, start):
+        node = start
+        queue = PriorityQueue()
+        visited: dict[str:bool] = {node: True}
+        while queue.queue:
+            node = queue.delete()
+            neighbors = self.get_adjacency_list()[node]
+            for i in neighbors:
+                if i not in visited:
+                    queue.insert(i)
+                    visited[i] = True
+        return list(visited.keys())

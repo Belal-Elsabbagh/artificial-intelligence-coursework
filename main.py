@@ -1,5 +1,5 @@
-from labs import lab_4
-
+from labs import lab_4, lab_3
 
 if __name__ == '__main__':
-    lab_4.run_lab_4()
+    lab_3.run()
+    lab_4.run()
