@@ -1,25 +1,41 @@
-class PriorityQueue(object):
+import heapq
+
+
+class PriorityQueue:
+    """
+      Implements a priority queue data structure. Each inserted item
+      has a priority associated with it and the client is usually interested
+      in quick retrieval of the lowest-priority item in the queue. This
+      data structure allows O(1) access to the lowest-priority item.
+    """
+
     def __init__(self):
-        self.queue = []
+        self.heap = []
+        self.count = 0
 
-    def __str__(self):
-        return ' '.join([str(i) for i in self.queue])
+    def push(self, item, priority):
+        entry = (priority, self.count, item)
+        heapq.heappush(self.heap, entry)
+        self.count += 1
 
-    def isEmpty(self):
-        return len(self.queue) == 0
+    def pop(self):
+        (priority, _, item) = heapq.heappop(self.heap)
+        return item, priority
 
-    def insert(self, data):
-        self.queue.append(data)
+    def is_empty(self):
+        return len(self.heap) == 0
 
-    def delete(self):
-        try:
-            max_val = 0
-            for i in range(len(self.queue)):
-                if self.queue[i] > self.queue[max_val]:
-                    max_val = i
-            item = self.queue[max_val]
-            del self.queue[max_val]
-            return item
-        except IndexError:
-            print()
-            exit()
+    def update(self, item, priority):
+        # If item already in priority queue with higher priority, update its priority and rebuild the heap.
+        # If item already in priority queue with equal or lower priority, do nothing.
+        # If item not in priority queue, do the same thing as self.push.
+        for index, (p, c, i) in enumerate(self.heap):
+            if i == item:
+                if p <= priority:
+                    break
+                del self.heap[index]
+                self.heap.append((priority, c, item))
+                heapq.heapify(self.heap)
+                break
+        else:
+            self.push(item, priority)

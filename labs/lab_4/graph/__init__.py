@@ -10,14 +10,24 @@ class Graph:
     """
     __adjacency_list: dict[str:dict[str:int]] = None
 
-    def __init__(self, adjacency_list):
+    def __init__(self, adjacency_list, heuristic_costs_list):
         self.__adjacency_list: dict[str:dict[str:int]] = adjacency_list
+        self.__heuristic_costs_list = heuristic_costs_list
 
     def get_adjacency_list(self) -> dict[str:dict[str:int]]:
         return self.__adjacency_list
 
     def get_number_of_nodes(self):
         return len(self.get_adjacency_list().keys())
+
+    def get_neighbors(self, node):
+        return self.get_adjacency_list()[node]
+
+    def get_heuristic_cost_of_node(self, node, neighbor, priority):
+        return self.__heuristic_costs_list[node]
+
+    def get_cost_of_edge(self, start, end):
+        return self.get_adjacency_list().get(start).get(end)
 
     def __dfs_search_util(self, node, goal, visited_list: list[str] = None):
         if visited_list is None:
@@ -31,11 +41,11 @@ class Graph:
                 if res:
                     return visited_list
 
-    def __dfs_util(self, node, visited_list = None):
+    def __dfs_util(self, node, visited_list=None):
         if visited_list is None:
             visited_list = list()
-        visited_list.append(node)
-        for neighbour in self.get_adjacency_list()[node]:
+        self.visit_node(node, visited_list)
+        for neighbour in self.get_neighbors(node):
             if neighbour not in visited_list:
                 self.__dfs_util(neighbour, visited_list)
         return visited_list
@@ -43,7 +53,7 @@ class Graph:
     def get_dfs_sequence(self, start_node) -> list[str]:
         return self.__dfs_util(start_node)
 
-    def get_node_dfs(self,start, goal):
+    def search_dfs(self, start, goal):
         return self.__dfs_search_util(start, goal)
 
     def search_bfs(self, start_node, search_node) -> list[str] | None:
@@ -52,33 +62,76 @@ class Graph:
         visited: dict[str:bool] = {node: True}
         while search_node not in visited:
             node = queue.pop(0)
-            for i in self.get_adjacency_list()[node]:
+            visited[node] = True
+            if node == search_node:
+                return list(visited.keys())
+            for i in self.get_neighbors(node):
                 if i not in visited:
                     queue.append(i)
-                    visited[i] = True
-        return list(visited.keys())
+        return None
 
     def get_bfs_sequence(self, start_node) -> list[str] | None:
         node = start_node
         queue = [node]
-        visited: dict[str:bool] = {node: True}
+        visited: dict[str:bool] = {}
         while queue:
             node = queue.pop(0)
-            for i in self.get_adjacency_list()[node]:
+            visited[node] = True
+            for i in self.get_neighbors(node):
                 if i not in visited:
                     queue.append(i)
-                    visited[i] = True
         return list(visited.keys())
 
-    def uniform_cost_search(self, start):
-        node = start
-        queue = PriorityQueue()
-        visited: dict[str:bool] = {node: True}
-        while queue.queue:
-            node = queue.delete()
-            neighbors = self.get_adjacency_list()[node]
-            for i in neighbors:
-                if i not in visited:
-                    queue.insert(i)
-                    visited[i] = True
-        return list(visited.keys())
+    def __search_by_priority(self, _start, _goal, calculate_priority):
+        node = _start
+        visited: dict[str:bool] = {}
+        path = [node]
+        priority = calculate_priority(node, path, 0)
+        open_list = PriorityQueue()
+        open_list.push(path, priority)
+        while not open_list.is_empty():
+            node, path, priority = self.get_front_node(open_list)
+            self.visit_node(node, visited)
+            if node == _goal:
+                return {'path': path, 'cost': self.get_cost_of_path(path)}
+            neighbors = self.get_neighbors(node)
+            for neighbor, cost in neighbors.items():
+                if neighbor in visited:
+                    continue
+                path_to_neighbor = path + [neighbor]
+                open_list.update(path_to_neighbor, calculate_priority(neighbor, path_to_neighbor, priority))
+
+    def greedy_best_first_search(self, _start, _goal):
+        return self.__search_by_priority(_start, _goal, self.get_heuristic_cost_of_node)
+
+    def a_star_search(self, _start, _goal):
+        return self.__search_by_priority(_start, _goal, self.get_expected_cost)
+
+    def search_ucs(self, _start, _goal):
+        return self.__search_by_priority(_start, _goal, self.get_ucs_priority)
+
+    def get_ucs_priority(self, node, path, priority):
+        return self.get_cost_of_path(path)
+
+    def get_expected_cost(self, node, path, priority):
+        return self.get_cost_of_path(path) + self.get_heuristic_cost_of_node(node, path, priority)
+
+    @staticmethod
+    def visit_node(node, visited_list):
+        visited_list[node] = True
+
+    @staticmethod
+    def get_front_node(open_list):
+        path, priority = open_list.pop()
+        node = path[-1]
+        return node, path, priority
+
+    @staticmethod
+    def node_is_in_open_list(neighbor, open_list):
+        return neighbor not in (i[2][0] for i in open_list.heap)
+
+    def get_cost_of_path(self, new_path):
+        total = 0
+        for i in range(1, len(new_path)):
+            total += self.get_cost_of_edge(new_path[i-1], new_path[i])
+        return total
