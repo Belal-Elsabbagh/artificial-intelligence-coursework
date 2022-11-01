@@ -4,7 +4,6 @@ from labs.lab_4.graph import Graph
 
 def run():
     test_graph = Graph(graph_dictionary, heuristic)
-
     print(f'DFS result: {test_graph.search_dfs("Arad", "Bucharest")}')
     print(f'BFS result: {test_graph.search_bfs("Arad", "Bucharest")}')
     print(f'Uniform Cost Search result: {test_graph.search_ucs("Arad", "Bucharest")}')

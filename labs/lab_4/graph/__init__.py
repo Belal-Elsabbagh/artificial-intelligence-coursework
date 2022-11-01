@@ -1,6 +1,9 @@
 """
 A Graph class that supports multiple searching algorithms.
 """
+import json
+from datetime import datetime
+
 from labs.lab_4.priority_queue import PriorityQueue
 
 
@@ -63,12 +66,10 @@ class Graph:
         while search_node not in visited:
             node = queue.pop(0)
             visited[node] = True
-            if node == search_node:
-                return list(visited.keys())
             for i in self.get_neighbors(node):
                 if i not in visited:
                     queue.append(i)
-        return None
+        return list(visited.keys()) if search_node in visited.keys() else None
 
     def get_bfs_sequence(self, start_node) -> list[str] | None:
         node = start_node
@@ -93,7 +94,14 @@ class Graph:
             node, path, priority = self.get_front_node(open_list)
             self.visit_node(node, visited)
             if node == _goal:
-                return {'path': path, 'cost': self.get_cost_of_path(path)}
+                result = {
+                    'path': path,
+                    'cost': self.get_cost_of_path(path),
+                    'visited_order': list(visited.keys())
+                }
+                now = datetime.now()
+                json_result = json.dumps(result, indent=4)
+                return json_result
             neighbors = self.get_neighbors(node)
             for neighbor, cost in neighbors.items():
                 if neighbor in visited:
@@ -130,8 +138,5 @@ class Graph:
     def node_is_in_open_list(neighbor, open_list):
         return neighbor not in (i[2][0] for i in open_list.heap)
 
-    def get_cost_of_path(self, new_path):
-        total = 0
-        for i in range(1, len(new_path)):
-            total += self.get_cost_of_edge(new_path[i-1], new_path[i])
-        return total
+    def get_cost_of_path(self, path):
+        return sum([self.get_cost_of_edge(previous, current) for previous, current in zip(path, path[1:])])
