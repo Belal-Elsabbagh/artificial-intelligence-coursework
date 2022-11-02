@@ -1,5 +1,4 @@
-from statistics import mode
-
+from collections import Counter
 import numpy as np
 
 
@@ -16,16 +15,16 @@ class KNN:
     def __calculate_distances_from_point(self, _object):
         distances = []
         for group, features in self.dataset.items():
-            for point in features:
-                distances.append((self.distance_function(point, _object), group))
+            distances += [(self.distance_function(point, _object), group) for point in features]
         return distances
 
-    def get_neighbor_labels(self, _object):
+    def __get_knn_labels(self, _object):
         distances = sorted(self.__calculate_distances_from_point(_object))
         return [i[1] for i in distances[:self.k]]
 
     def classify(self, _object):
-        return mode(self.get_neighbor_labels(_object))
+        lst = self.__get_knn_labels(_object)
+        return max(set(lst), key=lst.count)
 
     def regress(self, _object):
-        return np.mean(self.get_neighbor_labels(_object))
+        return np.mean(self.__get_knn_labels(_object))

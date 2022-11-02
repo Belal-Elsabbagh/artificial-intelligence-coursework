@@ -1,0 +1,18 @@
+{
+    "path": [
+        "Arad",
+        "Sibiu",
+        "RimnicuVilcea",
+        "Pitesti",
+        "Bucharest"
+    ],
+    "cost": 418,
+    "visited_order": [
+        "Arad",
+        "Sibiu",
+        "RimnicuVilcea",
+        "Pitesti",
+        "Fagaras",
+        "Bucharest"
+    ]
+}

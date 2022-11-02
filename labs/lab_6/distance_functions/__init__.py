@@ -1,13 +1,13 @@
 import math
 
 
-def calculate_manhattan_distance():
-    pass
+def calculate_euclidean_distance(_rec, _ref):
+    return math.sqrt(sum([(i - j) ** 2 for i, j in zip(_rec, _ref)]))
 
 
-def calculate_euclidean_distance(x1, x2):
-    return math.sqrt((x1[0] - x2[0]) ** 2 + (x1[1] - x2[1]) ** 2)
+def calculate_manhattan_distance(_rec, _ref):
+    return sum([abs(i - j) for i, j in zip(_rec, _ref)])
 
 
-def calculate_minkowski_distance():
-    pass
+def calculate_minkowski_distance(_rec, _ref, _exp=2):
+    return sum([abs(i - j) ** _exp for i, j in zip(_rec, _ref)]) ** (1/_exp)
