@@ -3,20 +3,37 @@ The given graph content.
 """
 
 graph_dictionary: dict[str:dict[str:int]] = {
-    'Arad': {'Zerind': 75, 'Timisoara': 118, 'Sibiu': 140},
-    'Zerind': {'Oradea': 71, 'Arad': 75},
+    'Arad': {'Sibiu': 140, 'Timisoara': 118, 'Zerind': 75},
+    'Zerind': {'Arad': 75, 'Oradea': 71},
     'Timisoara': {'Arad': 118, 'Lugoj': 111},
-    'Sibiu': {'Arad': 140, 'Oradea': 151, 'Fagaras': 99, 'RimnicuVilcea': 80},
-    'Oradea': {'Zerind': 71, 'Sibiu': 151},
-    'Lugoj': {'Timisoara': 111, 'Mehadia': 70},
-    'RimnicuVilcea': {'Sibiu': 80, 'Pitesti': 97, 'Craiova': 146},
-    'Mehadia': {'Lugoj': 70, 'Dobreta': 75},
-    'Craiova': {'Dobreta': 120, 'RimnicuVilcea': 146, 'Pitesti': 138},
-    'Pitesti': {'RimnicuVilcea': 97, 'Craiova': 138, 'Bucharest': 101},
-    'Fagaras': {'Sibiu': 99, 'Bucharest': 211},
-    'Dobreta': {'Mehadia': 75, 'Craiova': 120},
-    'Bucharest': {'Fagaras': 211, 'Pitesti': 101, 'Giurgiu': 90},
+    'Sibiu': {'Arad': 140, 'Fagaras': 99, 'Oradea': 151, 'RimnicuVilcea': 80},
+    'Oradea': {'Sibiu': 151, 'Zerind': 71},
+    'Lugoj': {'Mehadia': 70, 'Timisoara': 111},
+    'RimnicuVilcea': {'Craiova': 146, 'Pitesti': 97, 'Sibiu': 80},
+    'Mehadia': {'Dobreta': 75, 'Lugoj': 70},
+    'Craiova': {'Dobreta': 120, 'Pitesti': 138, 'RimnicuVilcea': 146},
+    'Pitesti': {'Bucharest': 101, 'Craiova': 138, 'RimnicuVilcea': 97},
+    'Fagaras': {'Bucharest': 211, 'Sibiu': 99},
+    'Dobreta': {'Craiova': 120, 'Mehadia': 75},
+    'Bucharest': {'Fagaras': 211, 'Giurgiu': 90, 'Pitesti': 101},
     'Giurgiu': {'Bucharest': 90}
+}
+
+short_graph_dictionary: dict[str:dict[str:int]] = {
+    'A': {'S': 140, 'T': 118, 'Z': 75},
+    'Z': {'A': 75, 'O': 71},
+    'T': {'A': 118, 'L': 111},
+    'S': {'A': 140, 'F': 99, 'O': 151, 'R': 80},
+    'O': {'S': 151, 'Z': 71},
+    'L': {'M': 70, 'T': 111},
+    'R': {'C': 146, 'P': 97, 'S': 80},
+    'M': {'D': 75, 'L': 70},
+    'C': {'D': 120, 'P': 138, 'R': 146},
+    'P': {'B': 101, 'C': 138, 'R': 97},
+    'F': {'B': 211, 'S': 99},
+    'D': {'C': 120, 'M': 75},
+    'B': {'F': 211, 'G': 90, 'P': 101},
+    'G': {'B': 90}
 }
 
 heuristic = {
@@ -40,6 +57,25 @@ heuristic = {
     'Neamt': 234,
     'Hirsova': 151,
     'Eforie': 161
+}
+
+exam_heuristic = {
+    'A': 340,
+    'Z': 350,
+    'O': 380,
+    'S': 215,
+    'F': 210,
+    'R': 146,
+    'T': 310,
+    'L': 200,
+    'M': 170,
+    'D': 120,
+    'P': 138,
+    'C': 190,
+    'B': 0,
+    'G': 150,
+    'U': 280,
+    'V': 450,
 }
 
 heuristic_costs = {

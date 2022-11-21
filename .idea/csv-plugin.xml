@@ -3,7 +3,14 @@
   <component name="CsvFileAttributes">
     <option name="attributeMap">
       <map>
-        <entry key="C:\Users\belsa\AppData\Local\Temp\Iris.csv">
+        <entry key="\labs\content\Iris.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\labs\content\drug200.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />

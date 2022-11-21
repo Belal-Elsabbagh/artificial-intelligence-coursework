@@ -15,6 +15,22 @@ def tiny_test():
     test_knn(data, point, 4)
 
 
+def exam_test():
+    data = {
+        77: [(5, 45)],
+        47: [(5.11, 26)],
+        55: [(5.6, 30)],
+        59: [(5.9, 34)],
+        72: [(4.8, 40)],
+        60: [(5.8, 36), (5.8, 28), (5.5, 38)],
+        40: [(5.3, 19)],
+        45: [(5.5, 23)],
+        58: [(5.6, 32)],
+    }
+    point = (5.1, 40)
+    test_knn(data, point, 3)
+
+
 def test_knn(data, point, k):
     knn_test_models = [
         KNN(k, data, calculate_euclidean_distance),
@@ -34,6 +50,7 @@ def test_model(model, point):
     return {
         'distance_function': model.distance_function.__name__,
         'classified_category': model.classify(point),
+        'regressed_value': model.regress(point),
     }
 
 

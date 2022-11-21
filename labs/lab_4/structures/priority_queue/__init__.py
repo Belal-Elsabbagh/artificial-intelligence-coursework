@@ -1,7 +1,9 @@
 import heapq
 
+from labs.lab_4.structures.frontier_structure import Frontier
 
-class PriorityQueue:
+
+class PriorityQueue(Frontier):
     """
       Implements a priority queue data structure. Each inserted item
       has a priority associated with it and the client is usually interested
@@ -10,32 +12,28 @@ class PriorityQueue:
     """
 
     def __init__(self):
-        self.heap = []
+        super().__init__()
         self.count = 0
 
-    def push(self, item, priority):
-        entry = (priority, self.count, item)
-        heapq.heappush(self.heap, entry)
-        self.count += 1
+    def push(self, item, priority=None):
+        entry = (priority, item)
+        heapq.heappush(self.list, entry)
 
     def pop(self):
-        (priority, _, item) = heapq.heappop(self.heap)
-        return item, priority
-
-    def is_empty(self):
-        return len(self.heap) == 0
+        (priority, item) = heapq.heappop(self.list)
+        return item
 
     def update(self, item, priority):
         # If item already in priority queue with higher priority, update its priority and rebuild the heap.
         # If item already in priority queue with equal or lower priority, do nothing.
         # If item not in priority queue, do the same thing as self.push.
-        for index, (p, c, i) in enumerate(self.heap):
+        for index, (p, i) in enumerate(self.list):
             if i == item:
                 if p <= priority:
                     break
-                del self.heap[index]
-                self.heap.append((priority, c, item))
-                heapq.heapify(self.heap)
+                del self.list[index]
+                self.list.append((priority, item))
+                heapq.heapify(self.list)
                 break
         else:
             self.push(item, priority)

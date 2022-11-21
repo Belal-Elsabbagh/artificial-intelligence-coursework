@@ -4,7 +4,7 @@ A Graph class that supports multiple searching algorithms.
 import json
 from datetime import datetime
 
-from labs.lab_4.priority_queue import PriorityQueue
+from labs.lab_4.structures.priority_queue import PriorityQueue
 
 
 class Graph:
@@ -101,7 +101,7 @@ class Graph:
                 }
                 now = datetime.now()
                 json_result = json.dumps(result, indent=4)
-                return json_result
+                return result
             neighbors = self.get_neighbors(node)
             for neighbor, cost in neighbors.items():
                 if neighbor in visited:
