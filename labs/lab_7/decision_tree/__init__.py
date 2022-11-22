@@ -36,4 +36,5 @@ def build_decision_tree(df: pd.DataFrame, label, visited=None, tree: dict = None
                 continue
             visited.append(i)
             tree[feature].update({i: build_decision_tree(feat_val, label, visited, tree)})
+        break
     return tree
