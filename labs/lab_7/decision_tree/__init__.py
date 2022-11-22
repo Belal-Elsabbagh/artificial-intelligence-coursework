@@ -15,26 +15,31 @@ def e(feat_grp, label, total_count):
     return sum([(len(val) / total_count) * e_feat(val, label) for n, val in feat_grp])
 
 
-def tree_util(df: pd.DataFrame, label, tree):
-    for i, val in df.groupby(label):
-        tree = tree_util(val, label, tree)
-    return tree
+def nested_set(dic, keys, value):
+    for key in keys[:-1]:
+        dic = dic.setdefault(key, {})
+    dic[keys[-1]] = value
 
 
 def build_decision_tree(df: pd.DataFrame, label, visited=None, tree: dict = None):
     if visited is None:
         visited = []
-    entropy_values = dict(sorted({f: e(df.groupby(f), label, len(df)) for f in df}.items(), key=lambda x: x[1]))
-    del entropy_values[label]
+    feature = get_min_entropy_feature(df, label)
     if tree is None:
-        tree = {f: {} for f in entropy_values}
+        tree = {feature: {}}
     if len(df[label].unique()) == 1:
         return df[label].unique()[0]
-    for feature, entropy in entropy_values.items():
-        for i, feat_val in df.groupby(feature):
-            if i in visited:
-                continue
-            visited.append(i)
-            tree[feature].update({i: build_decision_tree(feat_val, label, visited, tree)})
-        break
+    if feature not in visited:
+        visited.append(feature)
+        feat_val_groups = df.groupby(feature)
+        tree[feature] = {i: {} for i, grp in feat_val_groups}
+        for i, feat_val in feat_val_groups:
+            tree[feature].update({i: build_decision_tree(feat_val, label, visited, tree[feature][i])})
     return tree
+
+
+def get_min_entropy_feature(df, label):
+    entropy_values = dict(sorted({f: e(df.groupby(f), label, len(df)) for f in df}.items(), key=lambda x: x[1]))
+    del entropy_values[label]
+    feature = min(entropy_values, key=entropy_values.get)
+    return feature
