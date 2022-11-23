@@ -1,6 +1,6 @@
 import pandas as pd
 
-from labs.lab_7.id3.entropy import max_info_gain_feature
+from labs.lab_7.id3.entropy import min_e_feature
 
 
 def id3(df: pd.DataFrame, label: str):
@@ -8,7 +8,7 @@ def id3(df: pd.DataFrame, label: str):
 
 
 def _build_decision_tree(df: pd.DataFrame, label: str, visited: list, tree: dict):
-    feature = max_info_gain_feature(df, label)
+    feature = min_e_feature(df, label)
     tree[feature] = {}
     if _label_has_one_unique_value(df, label):
         return _get_first_label_value(df, label)

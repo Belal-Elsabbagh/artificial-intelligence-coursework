@@ -15,7 +15,7 @@ def _e(feat_grp, label, total_count):
     return sum([(len(val) / total_count) * _e_feat(val, label) for n, val in feat_grp])
 
 
-def max_info_gain_feature(df, label):
+def min_e_feature(df, label):
     entropy_values = dict(sorted({f: _e(df.groupby(f), label, len(df)) for f in df}.items(), key=lambda x: x[1]))
     del entropy_values[label]
     feature = min(entropy_values, key=entropy_values.get)
